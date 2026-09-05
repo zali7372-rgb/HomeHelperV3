@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -32,20 +32,16 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      - name: Verify project
-        working-directory: HomeHub_Mobile_Tablet_UI_REWORK_v3/HomeHubMobile
+      - name: Check project structure
+        working-directory: HomeHub_Mobile_CloudSync/HomeHubMobile
         run: |
-          echo "===== PROJECT ====="
+          echo "===== PROJECT DIRECTORY ====="
           pwd
-
-          echo "===== FILES ====="
-          find . -maxdepth 3 -type f | sort
-
-          echo "===== SETTINGS ====="
-          cat settings.gradle.kts
+          echo "===== PROJECT FILES ====="
+          find . -maxdepth 5 -type f | sort
 
       - name: Build APK
-        working-directory: HomeHub_Mobile_Tablet_UI_REWORK_v3/HomeHubMobile
+        working-directory: HomeHub_Mobile_CloudSync/HomeHubMobile
         run: |
           gradle --no-daemon \
             -Pandroid.useAndroidX=true \
@@ -56,5 +52,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HomeHub-debug-apk
-          path: HomeHub_Mobile_Tablet_UI_REWORK_v3/HomeHubMobile/app/build/outputs/apk/debug/app-debug.apk
+          path: HomeHub_Mobile_CloudSync/HomeHubMobile/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
