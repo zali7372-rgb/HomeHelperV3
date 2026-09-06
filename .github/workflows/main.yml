@@ -39,15 +39,16 @@ jobs:
         id: project
         shell: bash
         run: |
-          if [ -f "settings.gradle.kts" ] || [ -f "settings.gradle" ]; then
-            echo "dir=." >> "$GITHUB_OUTPUT"
-          elif [ -f "Mobile/settings.gradle.kts" ] || [ -f "Mobile/settings.gradle" ]; then
-            echo "dir=Mobile" >> "$GITHUB_OUTPUT"
-          else
+          PROJECT_DIR=$(find . -type f \( -name "settings.gradle.kts" -o -name "settings.gradle" \) -print -quit | xargs dirname)
+
+          if [ -z "$PROJECT_DIR" ]; then
             echo "Android Gradle project not found."
-            find . -maxdepth 3 -type f \( -name "settings.gradle.kts" -o -name "settings.gradle" \) -print
+            find . -type f \( -name "settings.gradle.kts" -o -name "settings.gradle" \) -print
             exit 1
           fi
+
+          echo "Android project found at: $PROJECT_DIR"
+          echo "dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Build Debug APK
         shell: bash
