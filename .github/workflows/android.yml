@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: Mobile
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,12 +25,15 @@ jobs:
 
       - name: Install Android SDK
         run: |
+          yes | sdkmanager --licenses || true
           sdkmanager "platform-tools"
           sdkmanager "platforms;android-35"
           sdkmanager "build-tools;35.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
 
       - name: Build APK
         run: gradle assembleDebug
@@ -43,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: HomeHub-debug
-          path: Mobile/app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
