@@ -10,6 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: Mobile
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,14 +33,14 @@ jobs:
           sdkmanager "platforms;android-35"
           sdkmanager "build-tools;35.0.0"
 
-      - name: Grant Gradle permission
-        run: chmod +x gradlew
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build APK
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: HomeHub-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: Mobile/app/build/outputs/apk/debug/app-debug.apk
