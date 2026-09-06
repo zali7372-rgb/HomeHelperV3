@@ -35,30 +35,14 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Find Android project
-        id: project
-        shell: bash
+      - name: Build HomeHub
+        working-directory: HomeHub_MOBILE_MAIN_YML_FIXED/Mobile
         run: |
-          PROJECT_DIR=$(find . -type f \( -name "settings.gradle.kts" -o -name "settings.gradle" \) -print -quit | xargs dirname)
-
-          if [ -z "$PROJECT_DIR" ]; then
-            echo "Android Gradle project not found."
-            find . -type f \( -name "settings.gradle.kts" -o -name "settings.gradle" \) -print
-            exit 1
-          fi
-
-          echo "Android project found at: $PROJECT_DIR"
-          echo "dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
-
-      - name: Build Debug APK
-        shell: bash
-        run: |
-          cd "${{ steps.project.outputs.dir }}"
           gradle assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: HomeHub-debug
-          path: ${{ steps.project.outputs.dir }}/app/build/outputs/apk/debug/app-debug.apk
+          path: HomeHub_MOBILE_MAIN_YML_FIXED/Mobile/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
